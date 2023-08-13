@@ -39,7 +39,9 @@ public class FileController {
 
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
-								   RedirectAttributes redirectAttributes) {
+								   RedirectAttributes redirectAttributes) throws IOException {
+
+		log.info("file : {}", file.getOriginalFilename());
 		if (file.isEmpty()) {
 			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
 			return "redirect:/";
@@ -54,6 +56,8 @@ public class FileController {
 					"You successfully uploaded " + fileName + "!");
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			file.getInputStream().close();
 		}
 
 		return "redirect:/";

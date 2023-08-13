@@ -1,4 +1,17 @@
 spring:
+  profiles:
+    active: local
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
+
+---
+
+spring:
+  profiles: local
+
   h2:
     console:
       enabled: true
@@ -24,4 +37,4 @@ spring:
       matching-strategy: ant_path_matcher
 
 file:
-  upload-dir: temp
+  upload-dir: C:\mybox-storage
