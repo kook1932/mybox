@@ -37,4 +37,4 @@ spring:
       matching-strategy: ant_path_matcher
 
 file:
-  upload-dir: C:\mybox-storage
+  upload-dir: C:\mybox-storage\
