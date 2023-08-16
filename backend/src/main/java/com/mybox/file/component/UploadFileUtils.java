@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 public class UploadFileUtils {
 
 	@Value("${file.upload-dir}")
-	private static String uploadDir;
+	private String uploadDir;
 
-	public static FilesResponse getFilesAndDirectory(String subPath) {
+	public FilesResponse getFilesAndDirectory(String subPath) {
 		String currentPath = StringUtils.cleanPath(uploadDir + subPath);
 		return new FilesResponse(currentPath, getUploadFiles(currentPath));
 	}
 
-	private static List<UploadFile> getUploadFiles(String currentPath) {
+	private List<UploadFile> getUploadFiles(String currentPath) {
 		List<UploadFile> uploadFiles = new ArrayList<>();
 		try {
 			uploadFiles = getFilesOnPath(currentPath);
@@ -41,22 +41,26 @@ public class UploadFileUtils {
 		return uploadFiles;
 	}
 
-	private static List<UploadFile> getFilesOnPath(String currentPath) throws IOException {
+	private List<UploadFile> getFilesOnPath(String currentPath) throws IOException {
 		return Files.walk(Paths.get(currentPath), 1)
 				.filter(path -> !path.equals(Paths.get(currentPath)))
 				.map(UploadFile::of)
 				.collect(Collectors.toList());
 	}
 
-	public static void saveMultipartFile(String finalPath, MultipartFile file) {
+	public void saveMultipartFiles(String savePath, List<MultipartFile> files) {
+		files.forEach(file -> saveMultipartFile(savePath, file));
+	}
+
+	private void saveMultipartFile(String path, MultipartFile file) {
 		try (InputStream is = file.getInputStream()) {
 			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-			Path targetLocation = Paths.get(finalPath).resolve(fileName);
+			Path targetLocation = Paths.get(uploadDir + path).resolve(fileName);
 
 			File targetDirectory = new File(targetLocation.toUri()).getParentFile();
 			if (!targetDirectory.exists()) {
 				if (targetDirectory.mkdirs()) {
-					log.error("Target directory created.");
+					log.info("Target directory created.");
 				} else {
 					log.error("Failed to create target directory.");
 				}

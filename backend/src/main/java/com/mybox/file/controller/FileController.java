@@ -1,6 +1,8 @@
 package com.mybox.file.controller;
 
+import com.mybox.file.component.UploadFileUtils;
 import com.mybox.file.model.response.FilesResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -16,10 +18,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static com.mybox.file.component.UploadFileUtils.getFilesAndDirectory;
-import static com.mybox.file.component.UploadFileUtils.saveMultipartFile;
-
 @Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
 public class FileController {
@@ -27,28 +27,30 @@ public class FileController {
 	@Value("${file.upload-dir}")
 	private String uploadDir;
 
+	private final UploadFileUtils uploadFileUtils;
+
 	/**
 	 * Upload Root 폴더 하위 디렉토리의 파일 추출
 	 * @return
 	 */
-	@GetMapping("/file")
-	public ResponseEntity<FilesResponse> getFiles(@RequestParam(defaultValue = "", required = false) String path) {
-		return ResponseEntity.ok(getFilesAndDirectory(path));
+	@GetMapping("/files")
+	public ResponseEntity<FilesResponse> getUploadFiles(@RequestParam(defaultValue = "", required = false) String path) {
+		return ResponseEntity.ok(uploadFileUtils.getFilesAndDirectory(path));
 	}
 
-	@PostMapping("/file")
+	@PostMapping("/files")
 	public ResponseEntity<String> saveUploadFiles(@RequestParam List<MultipartFile> files,
 												  @RequestParam String savePath) {
 		if (files.isEmpty()) {
 			return new ResponseEntity<>("file upload Fail : Empty File", new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 
-		files.forEach(file -> saveMultipartFile(uploadDir + savePath, file));
+		uploadFileUtils.saveMultipartFiles(savePath, files);
 		return ResponseEntity.ok("file upload success");
 	}
 
 
-	@GetMapping("/file/{filename:.+}")
+	@GetMapping("/files/{filename:.+}")
 	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 		try {
 			Path filePath = Paths.get(uploadDir).resolve(filename);
