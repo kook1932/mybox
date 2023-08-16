@@ -1,11 +1,10 @@
 package com.mybox.file.model;
 
+import com.mybox.file.component.UploadFileUtils;
 import lombok.Builder;
 import lombok.Data;
 
 import java.nio.file.Path;
-
-import static com.mybox.file.component.UploadFileUtils.getFileType;
 
 @Builder
 @Data
@@ -20,7 +19,7 @@ public class UploadFile {
 	public static UploadFile of(Path path) {
 		return UploadFile.builder()
 				.originalFilename(path.toFile().getName())
-				.contentType(getFileType(path))
+				.contentType(UploadFileUtils.getFileType(path))
 				.build();
 	}
 }

@@ -35,7 +35,7 @@ public class FileController {
 	 */
 	@GetMapping("/files")
 	public ResponseEntity<FilesResponse> getUploadFiles(@RequestParam(defaultValue = "", required = false) String path) {
-		return ResponseEntity.ok(uploadFileUtils.getFilesAndDirectory(path));
+		return ResponseEntity.ok(uploadFileUtils.getFiles(path));
 	}
 
 	@PostMapping("/files")
@@ -45,7 +45,7 @@ public class FileController {
 			return new ResponseEntity<>("file upload Fail : Empty File", new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 
-		uploadFileUtils.saveMultipartFiles(savePath, files);
+		uploadFileUtils.saveFiles(savePath, files);
 		return ResponseEntity.ok("file upload success");
 	}
 
