@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### vue build file
+src/main/resources/static/*
