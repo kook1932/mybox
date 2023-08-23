@@ -1,7 +1,9 @@
 <template>
-  <b-list-group>
-    <b-list-group-item v-for="(file, i) in files" :key="i">{{ file.originalFilename }}</b-list-group-item>
-  </b-list-group>
+  <div>
+    <b-list-group>
+      <b-list-group-item v-for="(file, i) in files" :key="i">{{ file.originalFilename }}</b-list-group-item>
+    </b-list-group>
+  </div>
 </template>
 
 <script>
@@ -22,7 +24,6 @@ export default {
         const res = getFiles(path);
         res.then((res) => {
           this.files = res.data.uploadFiles;
-          console.log(res.data.uploadFiles);
         })
       }
     }
