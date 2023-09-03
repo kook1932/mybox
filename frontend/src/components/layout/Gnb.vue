@@ -1,15 +1,26 @@
 <template>
     <div>
-        <b-button pill variant="outline-primary">Button</b-button>
-        <span class="remain">{{ text }}</span>
+        <formFile />
+        
     </div>
 </template>
 <script>
+
+import formFile from "../../views/formFile.vue"
+
 export default {
     name: 'Gnb',
+    components:{
+      formFile
+    },
     data() {
       return {
         text: "12/30GB"
+      }
+    },
+    methods: {
+      upload(files) {
+        console.log(files);
       }
     }
 }
