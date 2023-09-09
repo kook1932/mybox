@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { uploadFiles } from '@/api/file'
+
 export default {
     name: "formFile",
     data() {
@@ -27,7 +29,13 @@ export default {
         return files.length === 1 ? files[0].name : `${files.length} files selected`
       },
       upload() {
-        console.log(this.files);
+        const formData = new FormData();
+
+        this.files.forEach(file => formData.append("files", file));
+        formData.append("savePath", "/");
+
+        uploadFiles(formData);
+
       }
     }
 }

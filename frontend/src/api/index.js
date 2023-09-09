@@ -24,4 +24,4 @@ function registerInterceptor(instance) {
   );
 }
 
-export const request = create(`http://192.168.150.46:8080`);
+export const request = create(`http://192.168.150.70:8080`);
